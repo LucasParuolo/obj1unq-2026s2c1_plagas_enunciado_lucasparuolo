@@ -1,9 +1,47 @@
-object pepita {
-  var energy = 100
+class Barrio {
+  var property elementos = []
+  var property calidadBasica = 45
 
-  method energy() = energy
+  method elementoEsBueno(elemento) {
+    return elemento.esBueno(calidadBasica)
+  }
 
-  method fly(minutes) {
-    energy = energy - minutes * 3
+  method elementosQueSonBuenos() {
+    return elementos.filter({e => e.esBueno(calidadBasica)})
+  }
+
+  method esCopado() {
+    return self.elementosQueSonBuenos().size() > elementos.size() / 2
+  }
+}
+
+class Elemento {
+  method esBueno(nivelDeCalidadBasica) {
+    
+  }
+}
+
+class Hogar inherits Elemento{
+  var property nivelDeMugre = 0  
+  var property confort = 50
+
+  override method esBueno(nivelDeCalidadBasica) {
+      return confort > nivelDeMugre
+  }
+}
+
+class Huerta inherits Elemento{
+  var property capacidadDeProducion = 0
+
+  override method esBueno(nivelDeCalidadBasico){
+    return capacidadDeProducion > nivelDeCalidadBasico
+  }
+}
+
+class Mascota inherits Elemento{
+  var property nivelDeSalud = 260
+
+  override method esBueno(nivelDeCalidadBasica) {
+    return nivelDeSalud > 250
   }
 }
