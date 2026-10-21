@@ -1,9 +1,223 @@
-import example.pepita
+import elementos.*
+import plagas.*
 
-describe "group of tests for pepita" {
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+
+describe "Barrio Pristiono" {
+  test "Hogar Excelente" {
+    //Una casa acaba de ser remodelada en el barrio
+    //Probar que es una buena casa tras remoderlar su confort
+
+    
+    const hogar = new Hogar()
+    const barrio = new Barrio(elementos = [hogar])
+
+    assert.that(barrio.elementoEsBueno(hogar))
   }
 
+  test "Huerta Excepcional" {
+    //Una huerta acaba de ser instalada en el barrio
+    //Ahora esta dando frutos, demostrar que esta ofreciendo
+    //una buena cantidad
+
+    const huerta = new Huerta(capacidadDeProducion = 100)
+    const barrio = new Barrio(elementos = [huerta])
+
+    assert.that(barrio.elementoEsBueno(huerta))
+  }
+
+  test "Mascota Encantadora"{
+    //Uno de los vecinos a adoptado un perrito
+    //Demostrar que el cachorro esta sano y contento
+
+    const perro = new Mascota()
+    const barrio = new Barrio(elementos = [perro])
+
+    assert.that(barrio.elementoEsBueno(perro))
+  }
+
+  test "Hogar Abandonado"{
+    //Hay una casa en el barrio que ha sido abandonada por años
+    //Demostrar que el hogar no se encuentra en las mejores
+    //condiciones...
+
+    const hogar = new Hogar(confort = 0)
+    const barrio = new Barrio(elementos = [hogar])
+
+    assert.notThat(barrio.elementoEsBueno(hogar))
+  }
+
+  test "Huerta Descuidada" {
+    //Una huerta en el barrio no ha recibido cuidado en mucho tiempo
+    //Esta llena de malas hiervas y su produccion es practicamente nula
+    //Demostrar que este es el caso
+
+    const huerta = new Huerta(capacidadDeProducion = 10)
+    const barrio = new Barrio(elementos = [huerta])
+
+    assert.notThat(barrio.elementoEsBueno(huerta))
+  }
+
+  test "Mascota Malcuidada"{
+    //Hay un perro callejero que claramente no ha recibido cuidados
+    //veterinarios. Corroborar este dato para poder llevarlo al veterinario.
+    const perro = new Mascota(nivelDeSalud = 100)
+    const barrio = new Barrio(elementos = [perro])
+
+    assert.notThat(barrio.elementoEsBueno(perro))
+  }
+
+  test "El Barrio es Copado"{
+    //Demostrar que el barrio, compuesto de 4 casas, 1 huerta y 1 mascota
+    //es copado y la mayoria de sus elementos son buenos
+
+    const hogar1 = new Hogar()
+    const hogar2 = new Hogar()
+    const hogarAbandonada = new Hogar(confort = 0)
+    const hogar3 = new Hogar()
+    const huerta = new Huerta(capacidadDeProducion = 100)
+    const gato = new Mascota()
+
+    const barrio = new Barrio(elementos = [hogar1, hogar2, hogarAbandonada, hogar3, huerta, gato])
+
+    assert.that(barrio.esCopado())
+
+  }
+
+  test "El Barrio no es Copado"{
+    //Demostrar que el barrio, compuesto de 4 casas, la mayoria mal cuidadas, 
+    // 1 huerta mal mantenida y 1 mascota bien cuidada
+    //NO es copado y la mayoria de sus elementos son malos
+
+    const hogar1 = new Hogar(confort = 40, nivelDeMugre =60)
+    const hogar2 = new Hogar(confort = 30, nivelDeMugre = 30)
+    const hogarAbandonada = new Hogar(confort = 0, nivelDeMugre = 100)
+    const hogar3 = new Hogar()
+    const huerta = new Huerta(capacidadDeProducion = 10)
+    const gato = new Mascota()
+
+    const barrio = new Barrio(elementos = [hogar1, hogar2, hogarAbandonada, hogar3, huerta, gato])
+
+    assert.notThat(barrio.esCopado())
+    
+  }
+
+}
+
+describe "Plagas en el Barrio" {
+  test "Plaga de Cucarachas1" {
+    //Al barrio ha llegado una plaga de Cucarachas
+    //Amenazando al barrio y a sus residentes.
+    //Determinar el nivel de daño potencial que puede hacer a los
+    //Residentes
+
+    const cucarachas = new Cucarachas(poblacion = 6 ,pesoPromedio = 3)
+
+    assert.equals(3, cucarachas.nivelDaño())
+  }
+
+  test "Plaga de Cucarachas2" {
+    //Al barrio ha llegado una plaga de Cucarachas
+    //Amenazando al barrio y a sus residentes.
+    //Como buenas cucarachas, han estado aumentando su numero a niveles
+    //EXPONENCIALES asi como su peso
+    //Determinar si puede transmitir enfermedades
+
+    const cucarachas = new Cucarachas(poblacion = 16 ,pesoPromedio = 10)
+
+    assert.that(cucarachas.transmiteEnfermedad())
+  }
+
+  test "Plaga de Cucarachas AL ATAQUE" {
+    //Al barrio ha llegado una plaga de Cucarachas
+    //Amenazando al barrio y a sus residentes.
+    //Como buenas cucarachas, han estado aumentando su numero a niveles
+    //EXPONENCIALES asi como su peso y estan dispuestas a atacar una huerta
+    //Demostrar que tras el ataque la huerta ya no es un buen elemento
+    //y las cucarachas aumentan su peso.
+
+    const cucarachas = new Cucarachas(poblacion = 16 ,pesoPromedio = 10)
+    const huerta = new Huerta(capacidadDeProducion = 46)
+    const barrio = new Barrio(elementos = [huerta], calidadBasica = 45)
+
+    cucarachas.atacar(huerta)
+
+    assert.equals(12, cucarachas.pesoPromedio())
+    assert.notThat(barrio.elementoEsBueno(huerta))
+
+  }
+
+  test "Plaga de Pulgas1" {
+    //Al barrio ha llegado una plaga de Pulgas
+    //Amenazando a las mascotas del barrio.
+    //Determinar el nivel de daño potencial que puede hacer a los
+    //Animalitos
+
+    const pulgas = new Pulgas(poblacion = 6)
+
+    assert.equals(12, pulgas.nivelDaño())
+  }
+
+  test "Plaga de Pulgas2" {
+    //Al barrio ha llegado una plaga de Pulgas
+    //Amenazando a las mascotas del barrio.
+    //Determinar si pueden transmitir una potencial enfermedad
+
+    const pulgas = new Pulgas(poblacion = 16)
+
+    assert.that(pulgas.transmiteEnfermedad())
+  }
+
+  test "Plaga de Pulgas AL ATAQUE" {
+    //Al barrio ha llegado una plaga de Pulgas
+    //Amenazando a las mascotas del barrio.
+    //Han decidido atacar a un pobre gatito, afectando su salud
+    //Demostrar que esto a hecho mal a la salud del pobre animal
+
+    const pulgas = new Pulgas(poblacion = 16)
+    const gatete = new Mascota()
+    const barrio = new Barrio(elementos = [gatete], calidadBasica = 45)
+
+    pulgas.atacar(gatete)
+
+    assert.notThat(barrio.elementoEsBueno(gatete))
+
+  }
+
+  test "Plaga de Garrapatas AL ATAQUE" {
+    //Al barrio ha llegado una plaga de Garrapatas
+    //Amenazando a los residentes del barrio.
+    //Estas ni siquiera se molestan en esperar y ATACAN
+    //a un fiel firulais, comprobemos su estado de salud y si realmente le afecto
+
+    const garrapatas = new Garrapatas(poblacion = 10)
+    const firulais = new Mascota()
+    const barrio = new Barrio(elementos = [firulais], calidadBasica = 45)
+
+    garrapatas.atacar(firulais)
+
+    assert.notThat(barrio.elementoEsBueno(firulais))
+  }
+
+  test "Plaga de Mosquitos1" {
+    //Al barrio ha llegado una plaga de Mosquitos
+    //Silenciosamente amenazando al barrio con sus picaduras.
+    //Determinar el nivel de daño potencial que puede hacer a...
+    //La gente en general...
+
+    const mosquitos = new Mosquitos(poblacion = 6)
+
+    assert.equals(6, mosquitos.nivelDaño())
+  }
+
+  test "Plaga de Mosquitos2" {
+    //Al barrio ha llegado una plaga de Mosquitos
+    //Silenciosamente amenazando al barrio con sus picaduras.
+    //Y en esta epoca, las posibilidades de que transmitan
+    //enfermedades es alta. Comprobar que este es el caso
+
+    const mosquitos = new Mosquitos(poblacion = 15)
+
+    assert.that(mosquitos.transmiteEnfermedad())
+  }
 }
